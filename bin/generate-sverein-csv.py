@@ -1,6 +1,7 @@
 #-----------  standard imports
-from os.path import join as j, basename, dirname
+from os.path import join as j, basename, dirname, exists as fexists
 basedir = __file__.split("/bin")[0]
+from os import makedirs
 
 import sys
 sys.path.append( basedir )    # to enable using: import lib.xxxx
@@ -20,10 +21,15 @@ import lib.sverein_migration.util as util
 
 #-----------  setup directory structure and filenames
 vardir = j(basedir, 'var')
+makedirs( j(vardir, 'sverein'), exist_ok=True )
 clouddir = j( dirname(basedir), 'dsc99-cloud')  # DSC99-Cloud "nebenan" (synced with Nextcloud)
 
 verwaltungdir = j( clouddir, "DSC Kompetenzteams Jugendhockey", "Verwaltung" )
 db_filename = 'Mitgliederdatenbank_DSC99.mdb'
+
+if not fexists( j(verwaltungdir, db_filename) ):
+  print( "Datenbank-Datei aus DSC-Cloud nicht gefunden: ", j(verwaltungdir, db_filename))
+  exit (-1)
 
 #=====================================================
 # Application start
@@ -209,13 +215,13 @@ if lastschrift_ohne_zahlungsdaten_df.shape[0] > 0:
 # ------------------------------------------------------------------
 # Ausgabe der Import-Dateien:
 #
-with open( j(vardir, table_name+"-sverein.csv"), "w") as f:
+with open( j(vardir, "sverein", table_name+"-sverein.csv"), "w") as f:
   f.write( sverein_df.to_csv( sep=';', index=False, date_format='%d.%m.%Y' ) )
-with open( j(vardir, table_name+"-sverein-1.csv"), "w") as f:
+with open( j(vardir, "sverein", table_name+"-sverein-1.csv"), "w") as f:
   f.write( sverein_df[:999].to_csv( sep=';', index=False, date_format='%d.%m.%Y' ) )
-with open( j(vardir, table_name+"-sverein-2.csv"), "w") as f:
+with open( j(vardir, "sverein", table_name+"-sverein-2.csv"), "w") as f:
   f.write( sverein_df[1000:].to_csv( sep=';', index=False, date_format='%d.%m.%Y' ) )
-with open( j(vardir, table_name+"-sverein-test.csv"), "w") as f:
+with open( j(vardir, "sverein", table_name+"-sverein-test.csv"), "w") as f:
   f.write( sverein_df[sverein_df['Beitragsbezeichnung_1_1'].str.match(r"Umlage.*", na=False)][:100].to_csv( sep=';', index=False, date_format='%d.%m.%Y' ) )
 
 
