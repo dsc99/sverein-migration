@@ -18,3 +18,9 @@ Skripte zur Migration der DSC99 Mitgliederverwaltung nach S-Verein
     * Sync locally using the nexcloud client
 
 
+## Online resources
+
+* DSC99 S-Verein: https://verwaltung.s-verein.de/login/d17
+* DSC99 Cloud: https://cloud.dsc-99.org/
+    * Verwaltungs-Ordner: https://cloud.dsc-99.org/f/1408
+
