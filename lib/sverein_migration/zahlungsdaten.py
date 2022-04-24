@@ -12,5 +12,7 @@ def to_Zahlungsdatensatz( mitnum, df, mitnum_feld='mitnum_clean' ):
     if mitglied[n].size == 0:
       raise Exception()
     zahlungs_datum[n] = mitglied[n].iloc[0]
+  if not zahlungs_datum['Ktoinhaber']:
+    zahlungs_datum['Ktoinhaber'] = ", ".join( [mitglied['Name'].iloc[0], mitglied['Vorname'].iloc[0]] )
   return zahlungs_datum
 
