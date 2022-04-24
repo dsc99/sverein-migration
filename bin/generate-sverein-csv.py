@@ -132,6 +132,9 @@ print( sverein_df[sverein_df['Mitglieds-Nr'].duplicated(keep=False)] )
 
 print("====Fehlendes Geburtsdatum")
 print( df[df['Geburt'].isnull() & df['Sportart'].ne('Passives Eltern-Fördermitglied')] )
+sverein_df.loc[df['Geburt'].isnull() & df['Sportart'].ne('Passives Eltern-Fördermitglied'), ['Geburtsdatum']] = datetime(1970,1,1)
+sverein_df.loc[df['Geburt'].isnull() & df['Sportart'].ne('Passives Eltern-Fördermitglied'), ['Freifeldwert_3']] = "Geburtsdatum auf 1.1.1970 gesetzt"
+sverein_df.loc[df['Geburt'].isnull() & df['Sportart'].ne('Passives Eltern-Fördermitglied'), ['Freifeldname_3']] = 'Import-Meldung'
 
 print("====Abteilungszuordnung")
 print( sverein_df['Abteilung_1'].value_counts() )
