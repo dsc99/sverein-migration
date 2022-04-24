@@ -228,6 +228,10 @@ if lastschrift_ohne_zahlungsdaten_df.shape[0] > 0:
 #
 with open( j(vardir, "sverein", table_name+"-sverein.csv"), "w") as f:
   f.write( sverein_df.to_csv( sep=';', index=False, date_format='%d.%m.%Y' ) )
+
+# Clean any records without a Mitglieds-Nr.: (includes Sascha Heinrich...)
+sverein_df = sverein_df.loc[ sverein_df['Mitglieds-Nr'].notnull() ]
+
 with open( j(vardir, "sverein", table_name+"-sverein-1.csv"), "w") as f:
   f.write( sverein_df[:999].to_csv( sep=';', index=False, date_format='%d.%m.%Y' ) )
 with open( j(vardir, "sverein", table_name+"-sverein-2.csv"), "w") as f:
