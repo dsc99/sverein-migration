@@ -142,9 +142,6 @@ print( sverein_df['Abteilung_1'].value_counts() )
 sverein_df['Beitragsbezeichnung_1_1']=pd.Series( [beitraege.to_Umlagen(b, 'Investitionen') for a,b in df.iterrows()], index=df.index )
 sverein_df['Beitragsbezeichnung_1_2']=pd.Series( [beitraege.to_Umlagen(b, 'Gastro') for a,b in df.iterrows()], index=df.index )
 sverein_df['Beitragsbezeichnung_1_3']=pd.Series( [beitraege.to_Umlagen(b, 'Spind') for a,b in df.iterrows()], index=df.index )
-sverein_df['Beitragsstart_1_1']=pd.Series( df['Mitseit_dt'], index=df.index )
-sverein_df['Beitragsstart_1_2']=pd.Series( df['Mitseit_dt'], index=df.index )
-sverein_df['Beitragsstart_1_3']=pd.Series( [df['Mitseit_dt'].at[a] if b else None for a,b in sverein_df['Beitragsbezeichnung_1_3'].items()], index=df.index )
 # Haupt-Fachbeitrag:
 sverein_df['Beitragsbezeichnung_2_1']=pd.Series( [beitraege.to_Beitrag(b.iloc[0], b.iloc[1], b.iloc[2])
                                                   for a,b in sverein_df[['Abteilung_2', 'Beitrag', 'Sportart']].iterrows()],
@@ -161,6 +158,17 @@ print(sverein_df['Beitragsbezeichnung_1_3'].value_counts())
 with open( j(vardir, table_name+"-UmlagenOffen.csv"), "w") as f:
   umlagen_offen_df = df.loc[sverein_df['Beitragsbezeichnung_1_1'].str.startswith("Unbekannt")==True, ['Mitnum', 'Fanum', 'Vorname', 'Name', 'Sportart', 'Umlage']]
   f.write( umlagen_offen_df.to_csv( sep=';', index=False, date_format='%d.%m.%Y' ) )
+sverein_df.loc[sverein_df['Beitragsbezeichnung_1_1'].str.startswith("Unbekannt")==True, ['Freifeldwert_3']] = sverein_df.loc[sverein_df['Beitragsbezeichnung_1_1'].str.startswith("Unbekannt")==True, ['Beitragsbezeichnung_1_1']]
+sverein_df.loc[sverein_df['Beitragsbezeichnung_1_2'].str.startswith("Unbekannt")==True, ['Freifeldwert_3']] = sverein_df.loc[sverein_df['Beitragsbezeichnung_1_2'].str.startswith("Unbekannt")==True, ['Beitragsbezeichnung_1_2']]
+sverein_df.loc[sverein_df['Beitragsbezeichnung_1_1'].str.startswith("Unbekannt")==True, ['Freifeldname_3']] = 'Import-Meldung'
+sverein_df.loc[sverein_df['Beitragsbezeichnung_1_2'].str.startswith("Unbekannt")==True, ['Freifeldname_3']] = 'Import-Meldung'
+sverein_df.loc[sverein_df['Beitragsbezeichnung_1_1'].str.startswith("Unbekannt")==True, ['Beitragsbezeichnung_1_1']] = None
+sverein_df.loc[sverein_df['Beitragsbezeichnung_1_2'].str.startswith("Unbekannt")==True, ['Beitragsbezeichnung_1_2']] = None
+
+# Beitragsstart ist jeweils der Vereinseintritt
+sverein_df['Beitragsstart_1_1']=pd.Series( [df['Mitseit_dt'].at[a] if b else None for a,b in sverein_df['Beitragsbezeichnung_1_1'].items()], index=df.index )
+sverein_df['Beitragsstart_1_2']=pd.Series( [df['Mitseit_dt'].at[a] if b else None for a,b in sverein_df['Beitragsbezeichnung_1_2'].items()], index=df.index )
+sverein_df['Beitragsstart_1_3']=pd.Series( [df['Mitseit_dt'].at[a] if b else None for a,b in sverein_df['Beitragsbezeichnung_1_3'].items()], index=df.index )
 
 print( "====Beitrags-Zuordnung:")
 print( sverein_df['Beitragsbezeichnung_2_1'].value_counts() )
