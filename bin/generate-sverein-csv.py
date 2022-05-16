@@ -204,17 +204,21 @@ for fanum in df.loc[ df['Ktonr'].notnull() & df['Fanum'].notnull(), 'Fanum']:
 
 # Jetzt alle extrahierten Zahlungsdaten übertragen:
 for mitnum in zahlungs_daten:
-  sverein_df.loc[mitnum, 'Kontonummer']     = zahlungs_daten[mitnum]['Ktonr']
-  sverein_df.loc[mitnum, 'Bankleitzahl']    = zahlungs_daten[mitnum]['Blz']
-  sverein_df.loc[mitnum, 'Kreditinstitut']  = zahlungs_daten[mitnum]['Bank']
-  sverein_df.loc[mitnum, 'Kontoinhaber']    = zahlungs_daten[mitnum]['Ktoinhaber']
-
-  sverein_df.loc[sverein_df['Freifeldwert_1']==mitnum, 'Kontonummer']     = zahlungs_daten[mitnum]['Ktonr']
-  sverein_df.loc[sverein_df['Freifeldwert_1']==mitnum, 'Bankleitzahl']    = zahlungs_daten[mitnum]['Blz']
-  sverein_df.loc[sverein_df['Freifeldwert_1']==mitnum, 'Kreditinstitut']  = zahlungs_daten[mitnum]['Bank']
+  if zahlungs_daten[mitnum]['Ktonr'].startswith('DE'):
+    sverein_df.loc[mitnum, 'IBAN']            = zahlungs_daten[mitnum]['Ktonr']
+    sverein_df.loc[sverein_df['Freifeldwert_1']==mitnum, 'IBAN']     = zahlungs_daten[mitnum]['Ktonr']
+  else:
+    sverein_df.loc[mitnum, 'Kontonummer']     = zahlungs_daten[mitnum]['Ktonr']
+    sverein_df.loc[mitnum, 'Bankleitzahl']    = zahlungs_daten[mitnum]['Blz']
+    sverein_df.loc[mitnum, 'Kreditinstitut']  = zahlungs_daten[mitnum]['Bank']
+    sverein_df.loc[sverein_df['Freifeldwert_1']==mitnum, 'Kontonummer']     = zahlungs_daten[mitnum]['Ktonr']
+    sverein_df.loc[sverein_df['Freifeldwert_1']==mitnum, 'Bankleitzahl']    = zahlungs_daten[mitnum]['Blz']
+    sverein_df.loc[sverein_df['Freifeldwert_1']==mitnum, 'Kreditinstitut']  = zahlungs_daten[mitnum]['Bank']
+  
+  sverein_df.loc[mitnum, 'Kontoinhaber']      = zahlungs_daten[mitnum]['Ktoinhaber']
   sverein_df.loc[sverein_df['Freifeldwert_1']==mitnum, 'Kontoinhaber']    = zahlungs_daten[mitnum]['Ktoinhaber']
 
-lastschrift_ohne_zahlungsdaten_df = sverein_df[ (sverein_df['Zahlungsart']=='Lastschrift') & (sverein_df['Kontonummer'].isnull())]
+lastschrift_ohne_zahlungsdaten_df = sverein_df[ (sverein_df['Zahlungsart']=='Lastschrift') & (sverein_df['Kontonummer'].isnull())  & (sverein_df['IBAN'].isnull())]
 print("==== Lastschrift ohne Bankdaten:", lastschrift_ohne_zahlungsdaten_df.shape[0] )
 if lastschrift_ohne_zahlungsdaten_df.shape[0] > 0:
   print(lastschrift_ohne_zahlungsdaten_df)
