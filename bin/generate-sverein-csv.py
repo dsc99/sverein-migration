@@ -24,7 +24,7 @@ vardir = j(basedir, 'var')
 makedirs( j(vardir, 'sverein'), exist_ok=True )
 clouddir = j( dirname(basedir), 'dsc99-cloud')  # DSC99-Cloud "nebenan" (synced with Nextcloud)
 
-verwaltungdir = j( clouddir, "DSC Kompetenzteams Jugendhockey", "Verwaltung" )
+verwaltungdir = j( clouddir, "DSC Verwaltung" )
 db_filename = 'Mitgliederdatenbank_DSC99.mdb'
 
 if not fexists( j(verwaltungdir, db_filename) ):
